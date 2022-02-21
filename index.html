@@ -4,30 +4,40 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="apple-touch-icon" sizes="120x120" href="/images/apple-touch-icon.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png">
-  <link rel="manifest" href="/images/site.webmanifest">
-  <link rel="mask-icon" href="/images/safari-pinned-tab.svg" color="#5bbad5">
-  <link rel="shortcut icon" href="/images/favicon.ico">
+  <link rel="apple-touch-icon" sizes="120x120" href="./images/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="./images/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="./images/favicon-16x16.png">
+  <link rel="manifest" href="./images/site.webmanifest">
+  <link rel="mask-icon" href="./images/safari-pinned-tab.svg" color="#5bbad5">
+  <link rel="shortcut icon" href="./images/favicon.ico">
   <meta name="msapplication-TileColor" content="#da532c">
-  <meta name="msapplication-config" content="/images/browserconfig.xml">
+  <meta name="msapplication-config" content="./images/browserconfig.xml">
   <meta name="theme-color" content="#ffffff">
   <link rel="stylesheet" href="styles.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Saira+Stencil+One&display=swap" rel="stylesheet">
   <script src="dist/app.js"></script>
+  <script>
+    function checkEdits() {
+
+      //find out if the user has previously saved edits
+      if(localStorage.userEdits!=null)
+      document.getElementById("edit").innerHTML = localStorage.userEdits;
+      }
+    </script>
   <title>Battleship</title>
 </head>
-<body>
+<body onload="checkEdits()">
   <div class="main-container">
-      <div id="player-1-name">CADET</div>
-      <div class="vs-box">vs.</div>
+      <input id="name-change-button" class="name-change-button" type="button" value="save"/>
+      <div id="update" class="update">click to change name</div>
+      <div id="player-1-name" contenteditable="true">CADET</div>
+      <div class="vs-box">VS</div>
       <div id="player-2-name">CERISE</div>
     <div class="player-1-field" id="player-1-field"></div>
     <div class="player-2-field" id="player-2-field"></div>
-      <div class="player-1-ships">
+      <div id="player-1-ships" class="player-1-ships">
         <div class="ships p1-carrier">
           <div class="p1-carrier-0"></div>
           <div class="p1-carrier-1"></div>
@@ -56,8 +66,9 @@
           <div id="p1-destroyer-1"></div>
         </div>
       </div>
-      <div class="start-button">START</div>
-      <div class="player-2-ships">
+      <div id="start-button">START</div>
+      <div id="rotate-button">ROTATE</div>
+      <div id="player-2-ships" class="player-2-ships">
         <div class="ships p2-destroyer">
           <div id="p2-destroyer-0"></div>
           <div id="p2-destroyer-1"></div>
