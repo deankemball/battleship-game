@@ -1,50 +1,61 @@
 "use strict";
 document.addEventListener("DOMContentLoaded", () => {
-    // grid constants and types
-    const player1Grid = document.getElementById("player-1-field");
-    const player2Grid = document.getElementById("player-2-field");
+    // GRID STUFF
     const gridChars = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j'];
-    const player1GridState = {};
-    const player2GridState = {};
-    // ships constants
+    class Grid {
+        constructor(type) {
+            this.ships = [];
+            this.squares = [];
+            this.type = type;
+            this.state = {};
+            for (let i = 0; i < gridChars.length; i++) {
+                for (let j = 1; j <= 10; j++) {
+                    const position = `${gridChars[i]}-${j}`;
+                    this.state[position] = "";
+                }
+            }
+            this.element = document.createElement('div');
+            this.element.classList.add("grid", this.type === "player-1" ? "player-1-field" : "player-2-field");
+            const container = document.querySelector(".field-container");
+            container.appendChild(this.element);
+        }
+        createBoard() {
+            for (const key in this.state) {
+                const square = document.createElement("div");
+                square.id = `${this.type}-${key}`;
+                this.element.appendChild(square);
+                this.squares.push(square);
+            }
+        }
+        getValue(position) {
+            return this.state[position];
+        }
+        setValue(position, value) {
+            this.state[position] = value;
+        }
+        hasValue(position) {
+            const value = this.getValue(position);
+            return Boolean(value);
+        }
+    }
+    class Player1Grid extends Grid {
+        constructor() {
+            super("player-1");
+        }
+    }
+    class Player2Grid extends Grid {
+        constructor() {
+            super("player-2");
+        }
+    }
+    const player1Grid = new Player1Grid;
+    const player2Grid = new Player2Grid;
+    player1Grid.createBoard();
+    player2Grid.createBoard();
+    // SHIP STUFF
     const rotateButton = document.getElementById("rotate-button");
     const shipsContainer = document.getElementById("player-1-ships");
     const shipsContainerClass = shipsContainer.className;
-    // name change constants
-    const nameChangeButton = document.getElementById("name-change-button");
-    var playerName = document.getElementById("player-1-name");
-    var playerNameOrig = "CADET";
-    var noticeText = document.getElementById("update");
-    // grid functions
-    // create unique grid ids
-    for (let i = 0; i < gridChars.length; i++) {
-        for (let j = 1; j <= 10; j++) {
-            const player1Id = `player-1-${gridChars[i]}-${j}`;
-            const player2Id = `player-2-${gridChars[i]}-${j}`;
-            const player1Square = document.createElement('div');
-            player1Square.id = player1Id;
-            const player2Square = document.createElement('div');
-            player2Square.id = player2Id;
-            player1Grid.appendChild(player1Square);
-            player2Grid.appendChild(player2Square);
-        }
-    }
-    // create objects with unique key names (positions) and values (initialized as empty: "")
-    // create the key names
-    function createKeyValuePair(grid, position, value) {
-        grid[position] = value;
-    }
-    // return the value of the called key name 
-    function getValue(grid, position) {
-        return grid[position];
-    }
-    // loop through the grid and for every cell assign the unique key name and value (e.g. "b-3", "")
-    for (let i = 0; i < gridChars.length; i++) {
-        for (let j = 0; j <= 10; j++) {
-            createKeyValuePair(player1GridState, `${gridChars[i]}-${j}`, "");
-            createKeyValuePair(player2GridState, `${gridChars[i]}-${j}`, "");
-        }
-    }
     // declare the Ship class which has default attributes; type, isHorizontal, length
     class Ship {
         // assign lenghts for each instance of ShipType
@@ -94,7 +105,36 @@ document.addEventListener("DOMContentLoaded", () => {
         shipsContainer.classList.toggle(`${shipsContainerClass}-vertical`);
         return shipsArray.forEach((ship) => ship.rotate());
     });
-    // NAME CHANGE BUTTON
+    let selectedShipPart;
+    let selectedShip;
+    shipsArray.forEach(ship => {
+        ship.element.addEventListener('mousedown', (event) => {
+            selectedShipPart = event.target;
+            console.log(selectedShipPart);
+        });
+        ship.element.addEventListener("dragstart", (event) => {
+            selectedShip = event.target;
+            console.log(selectedShip);
+        });
+    });
+    player1Grid.element.addEventListener("dragstart", (event) => event.preventDefault());
+    player1Grid.element.addEventListener("dragover", (event) => event.preventDefault());
+    player1Grid.element.addEventListener("dragenter", (event) => event.preventDefault());
+    player1Grid.element.addEventListener("dragleave", (event) => event.preventDefault());
+    player1Grid.element.addEventListener("drop", (event) => {
+        const target = event.target;
+        makePositionFromId(target.id);
+    });
+    function makePositionFromId(id) {
+        const [char, number] = id.split("-").slice(2);
+        console.log(`${char}-${parseInt(number)}`);
+        return `${char}-${parseInt(number)}`;
+    }
+    // NAME CHANGE STUFF
+    const nameChangeButton = document.getElementById("name-change-button");
+    var playerName = document.getElementById("player-1-name");
+    var playerNameOrig = "CADET";
+    var noticeText = document.getElementById("update");
     function showButton() {
         nameChangeButton.classList.add("name-change-button-show");
         noticeText.classList.add("update-hide");

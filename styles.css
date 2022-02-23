@@ -127,8 +127,16 @@
   outline: 1px solid var(--neutral);
 }
 
+.field-container {
+  display: grid;
+  grid-template-columns: 500px 150px 500px;
+  grid-template-rows: 1fr;
+  grid-area: 3/1 / 4/4;
+}
+
 .player-1-field > div {
   border: 1px solid var(--neutral);
+  min-height: 50px;
 }
 
 .player-2-field {
@@ -142,6 +150,7 @@
 
 .player-2-field > div {
   border: 1px solid var(--neutral);
+  min-height: 50px;
 }
 
 #start-button {
@@ -178,40 +187,55 @@
 }
 
 .ships {
-  border: 2px solid var(--field-color);
+  display: flex;
+  box-sizing: content-box;
+  width: calc(50px * var(--width, 1));
+  height: calc(50px * var(--height, 1));
 }
 
+.ships > div {
+  height: 50px;
+  width: 50px;
+  border: 1px solid var(--field-color);
+}
 
 .player-1-ships {
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  grid-template-rows: 1fr;
   grid-area: 4/1 / 5/2;
-  align-items: end;
-  justify-items: start;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  padding-right: 50px;
 }
 
 .player-1-ships > div {
   background-color: var(--ship1-color);
+  flex-direction: column;
 }
 
 .player-1-ships-vertical {
-  grid-template-rows: repeat(5, 1fr);
-  grid-template-columns: 1fr;
-  align-items: end;
-  justify-items: start;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding-top: 10px;
 }
+
+
+.player-1-ships-vertical > div {
+  flex-direction: row;
+}
+
 .player-2-ships {
-  display: grid;
-  grid-template-columns: 0.2fr 0.2fr 0.2fr 0.2fr 0.2fr;
-  grid-template-rows: 1fr;
   grid-area: 4/3 / 5/4;
-  align-items: end;
-  justify-items: end;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  padding-left: 50px;
 }
 
 .player-2-ships > div {
   background-color: var(--ship2-color);
+  flex-direction: column;
 }
 .player-1-ships > div:hover {
   cursor: pointer;
