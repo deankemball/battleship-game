@@ -92,7 +92,7 @@ abstract class Grid {
   // declare the Ship class which has default attributes; type, isHorizontal, length
   class Ship {
     type: ShipType;
-    isHorizontal: boolean = true;
+    isVertical: boolean = true;
     length: number;
     
     // assign lenghts for each instance of ShipType
@@ -127,7 +127,7 @@ abstract class Grid {
         }
         
         rotate() {
-          this.isHorizontal = this.isHorizontal ? false : true;
+          this.isVertical = this.isVertical ? false : true;
           
           const shipSpecificClass = this.element.className.split(" ")[1];
           this.element.classList.toggle(`${shipSpecificClass}-vertical`)
@@ -152,17 +152,19 @@ abstract class Grid {
       return shipsArray.forEach((ship) => ship.rotate());
     });
 
-    let selectedShipPart 
-    let selectedShip 
+    let selectedShipPart: number
+    let selectedShip: PlayerShip;
 
     shipsArray.forEach(ship => {
       ship.element.addEventListener('mousedown', (event) => {
-        selectedShipPart = event.target;
-        console.log(selectedShipPart)
+        const target = event.target as HTMLElement
+        selectedShipPart = parseInt(target.id.split("-")[1]);
       });
       ship.element.addEventListener("dragstart", (event) => {
-        selectedShip = event.target;
-        console.log(selectedShip)
+        selectedShip = ship
+        const targetClass = selectedShip.element.className;
+        const targetShip = Array.from(document.getElementsByClassName(targetClass))[0]
+        targetShip.classList.add("hide-dragged")
       })
     })
 
@@ -180,13 +182,51 @@ abstract class Grid {
     );
     player1Grid.element.addEventListener("drop", (event) => {
       const target = event.target as HTMLElement;
-      makePositionFromId(target.id);
+      const position = makePositionFromId(target.id);
+      placeShip(selectedShip, selectedShipPart, position);
     });
-
+    
     function makePositionFromId(id: string): Position {
       const [char, number] = id.split("-").slice(2);
-      console.log(`${char}-${parseInt(number)}`)
       return `${char}-${parseInt(number)}`;
+    }
+    
+    function placeShip(ship: PlayerShip, shipPart: number, position: Position) {
+      // create a binding that holds all of the positions takes
+      const shipSquares: Position[] = []
+      const positionChar = position.split("-")[0]
+      const gridNum = parseInt(position.split("-")[1])
+      
+      if(!ship.isVertical) {
+        for (let i = 0; i < ship.length; i++) {
+          const column = gridNum + i - shipPart;
+          if(column > 10 || column < 1) {
+            return
+          } 
+          shipSquares.push(`${positionChar}-${column}`)
+        }
+      } else {
+        for (let i = 0; i < ship.length; i++) {
+          const char: number = gridChars.indexOf(positionChar);
+          const row = char + i - shipPart;
+          if(row > 10 || row < 1) {
+            return
+          } 
+          shipSquares.push(`${gridChars[row]}-${gridNum}`)
+        }
+      }
+      
+      const isTaken: boolean = shipSquares.some((square) =>
+      player1Grid.getValue(square)
+      );
+      
+      if(!isTaken) {
+        shipSquares.forEach(square => player1Grid.setValue(square, ship.type));
+        shipSquares.forEach(square => document.getElementById(`player-1-${square}`)?.classList.add("placed"));
+        ship.element.setAttribute("draggable", "false")
+        ship.element.classList.add("invisible")
+      }
+      // document.getElementById(`player-1-${shipSquares}`)?.classList.add("placed")
     }
     
     // NAME CHANGE STUFF
@@ -203,6 +243,7 @@ abstract class Grid {
     nameChangeButton.classList.remove("name-change-button-show")
     noticeText.classList.remove("update-hide")
   }
+
   function changeName() {
     var userVersion = playerName.innerHTML;
 

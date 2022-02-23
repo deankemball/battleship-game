@@ -61,7 +61,7 @@
   color: var(--field-color);
   align-self: end;
   font-size: 0.5em;
-  padding-bottom: 10px;
+  padding-bottom: 12.5px;
   user-select: none;
 }
 
@@ -80,7 +80,7 @@
   background-color: none;
   align-self: end;
   font-size: 0.5em;
-  margin-bottom: 10px;
+  margin-bottom: 12.5px;
   outline: none;
   font-family: 'Saira Stencil One', cursive;
   color: var(--field-color);
@@ -191,6 +191,7 @@
   box-sizing: content-box;
   width: calc(50px * var(--width, 1));
   height: calc(50px * var(--height, 1));
+  outline: 1px solid var(--field-color)
 }
 
 .ships > div {
@@ -205,6 +206,7 @@
   justify-content: space-between;
   align-items: flex-end;
   padding-right: 50px;
+  user-select: none;
 }
 
 .player-1-ships > div {
@@ -280,4 +282,17 @@
 .destroyer-container-vertical {
   --height: 1;
   --width: 2;
+}
+
+.invisible {
+  visibility: hidden;
+}
+
+.hide-dragged {
+  transition: transform 0.01s;
+  transform: translateX(-9999px);
+}
+
+.placed {
+  background-color: var(--ship1-color);
 }
