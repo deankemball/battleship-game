@@ -233,6 +233,7 @@
   justify-content: space-between;
   align-items: flex-end;
   padding-left: 50px;
+  user-select: none;
 }
 
 .player-2-ships > div {
@@ -285,7 +286,9 @@
 }
 
 .invisible {
+  opacity: 0;
   visibility: hidden;
+  transition: all 0.5s ease;
 }
 
 .hide-dragged {

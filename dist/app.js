@@ -134,6 +134,9 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     function placeShip(ship, shipPart, position) {
         // create a binding that holds all of the positions takes
+        const shipClass = Array.from(ship.element.classList)[1];
+        const enemyShip = document.getElementsByClassName(shipClass)[1];
+        enemyShip.classList.add("invisible");
         const shipSquares = [];
         const positionChar = position.split("-")[0];
         const gridNum = parseInt(position.split("-")[1]);

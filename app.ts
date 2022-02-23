@@ -193,6 +193,9 @@ abstract class Grid {
     
     function placeShip(ship: PlayerShip, shipPart: number, position: Position) {
       // create a binding that holds all of the positions takes
+      const shipClass: string = Array.from(ship.element.classList)[1]
+      const enemyShip = document.getElementsByClassName(shipClass)[1] as HTMLElement;
+      enemyShip.classList.add("invisible")
       const shipSquares: Position[] = []
       const positionChar = position.split("-")[0]
       const gridNum = parseInt(position.split("-")[1])
